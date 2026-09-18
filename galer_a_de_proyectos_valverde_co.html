@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="es" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería de Proyectos | Valverde & Co. Ebanistería & Interiorismo</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#faf7f2',
+                            100: '#f3ece0',
+                            400: '#d9ad74',
+                            500: '#c59b63', /* Bronce & Madera noble */
+                            600: '#b0834c',
+                            700: '#8e6638',
+                            900: '#1c1917',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Personalización de la barra de desplazamiento */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0c0a09; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+
+        /* Layout Masonry flexible para la galería */
+        .masonry-grid {
+            column-count: 1;
+            column-gap: 1.5rem;
+        }
+        @media (min-width: 640px) { .masonry-grid { column-count: 2; } }
+        @media (min-width: 1024px) { .masonry-grid { column-count: 3; } }
+        .masonry-item { 
+            break-inside: avoid; 
+            margin-bottom: 1.5rem; 
+        }
+
+        /* Animaciones suaves en tarjetas */
+        .img-hover-zoom {
+            transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1), filter 0.5s ease;
+        }
+        .masonry-item:hover .img-hover-zoom {
+            transform: scale(1.06);
+        }
+
+        /* Efectos de brillo en bordes */
+        .glass-card {
+            background: rgba(28, 25, 23, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .active-filter {
+            background-color: #c59b63 !important;
+            color: #0c0a09 !important;
+            font-weight: 700 !important;
+            box-shadow: 0 4px 20px -2px rgba(197, 155, 99, 0.35);
+        }
+    </style>
+</head>
+<body class="bg-stone-950 text-stone-100 font-sans antialiased selection:bg-brand-500 selection:text-stone-950 min-h-screen flex flex-col">
+
+    <header class="sticky top-0 z-40 bg-stone-950/90 backdrop-blur-md border-b border-stone-800/80 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Logo de la marca -->
+            <a href="#" class="flex items-center gap-3.5 group">
+                <div class="w-10 h-10 rounded-full bg-stone-900 border border-brand-500/40 flex items-center justify-center text-brand-500 font-serif font-bold text-xl group-hover:border-brand-500 group-hover:bg-brand-500 group-hover:text-stone-950 transition-all duration-300">
+                    <i class="fa-solid fa-compass-drafting text-sm"></i>
+                </div>
+                <div>
+                    <span class="font-serif text-xl sm:text-2xl font-bold tracking-tight text-stone-100 group-hover:text-brand-500 transition-colors">VALVERDE & CO.</span>
+                    <span class="block text-[10px] uppercase tracking-[0.2em] text-stone-400 font-sans font-medium">Ebanistería & Interiorismo</span>
+                </div>
+            </a>
+
+            <!-- Badge de estado de taller -->
+            <div class="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-stone-900 border border-stone-800 text-xs text-stone-300">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="font-medium text-stone-300">Catálogo Oficial de Proyectos</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+        
+        <!-- Cabecera de la galería de fotos -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 pb-8 border-b border-stone-800/80">
+            <div class="space-y-2">
+                <div class="inline-flex items-center gap-2 text-brand-500 text-xs font-semibold uppercase tracking-[0.25em]">
+                    <i class="fa-solid fa-border-all"></i>
+                    <span>Exposición Arquitectónica</span>
+                </div>
+                <h1 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-stone-100 tracking-tight">Galería de Proyectos</h1>
+                <p class="text-stone-400 text-sm sm:text-base max-w-2xl font-light leading-relaxed">
+                    Explora nuestra selección de obras singulares en maderas nobles, boiseries de alta precisión y mobiliario escultórico a medida.
+                </p>
+            </div>
+
+            <!-- Contador dinámico -->
+            <div class="flex items-center gap-3 bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 self-start md:self-auto">
+                <i class="fa-solid fa-layer-group text-brand-500 text-sm"></i>
+                <span class="text-xs text-stone-400">Mostrando <strong id="project-count" class="text-brand-500 font-bold text-sm">0</strong> obras</span>
+            </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8">
+            <!-- Botones de Categorías -->
+            <div class="flex flex-wrap items-center gap-2" id="category-filters">
+                <!-- Renderizado dinámico vía JavaScript -->
+            </div>
+
+            <!-- Buscador en tiempo real -->
+            <div class="relative w-full lg:w-80">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-500 text-xs"></i>
+                <input type="text" id="search-input" oninput="filterPhotos()" placeholder="Buscar madera, acabado o ciudad..." 
+                       class="w-full bg-stone-900 border border-stone-800 rounded-full pl-9 pr-9 py-2.5 text-xs sm:text-sm text-stone-200 placeholder-stone-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
+                <button id="clear-search-btn" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-stone-500 hover:text-stone-300 text-xs">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="photos-container" class="masonry-grid min-h-[450px]">
+            <!-- Renderizado dinámico de tarjetas con JavaScript -->
+        </div>
+
+        <!-- Estado vacío cuando no hay resultados de búsqueda -->
+        <div id="empty-state" class="hidden py-24 text-center space-y-4">
+            <div class="w-16 h-16 rounded-full bg-stone-900 border border-stone-800 flex items-center justify-center mx-auto text-stone-500 text-2xl">
+                <i class="fa-solid fa-tree"></i>
+            </div>
+            <h3 class="text-lg font-serif font-bold text-stone-200">No se encontraron piezas en el catálogo</h3>
+            <p class="text-stone-400 text-xs sm:text-sm max-w-md mx-auto">
+                No hay coincidencias para los criterios aplicados. Intenta modificar el filtro de categoría o el texto de búsqueda.
+            </p>
+            <button onclick="resetFilters()" class="inline-flex items-center gap-2 text-brand-500 hover:text-brand-400 text-xs font-semibold uppercase tracking-wider transition-colors pt-2">
+                <i class="fa-solid fa-rotate-left"></i>
+                <span>Restablecer Filtros</span>
+            </button>
+        </div>
+
+    </main>
+
+    <footer class="bg-stone-950 border-t border-stone-900 py-10 px-4 sm:px-6 lg:px-8 mt-16">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="text-center md:text-left space-y-1">
+                <span class="font-serif font-bold text-lg text-stone-200 tracking-tight">VALVERDE & CO.</span>
+                <p class="text-xs text-stone-500">© <span id="current-year"></span> Valverde & Co. Ebanistería Fina e Interiorismo. Todos los derechos reservados.</p>
+            </div>
+
+            <!-- Enlaces a redes sociales -->
+            <div class="flex items-center gap-3">
+                <a href="#" aria-label="Instagram" class="w-9 h-9 rounded-full bg-stone-900 border border-stone-800 flex items-center justify-center text-stone-400 hover:text-brand-500 hover:border-brand-500/40 transition-all">
+                    <i class="fa-brands fa-instagram text-xs"></i>
+                </a>
+                <a href="#" aria-label="Pinterest" class="w-9 h-9 rounded-full bg-stone-900 border border-stone-800 flex items-center justify-center text-stone-400 hover:text-brand-500 hover:border-brand-500/40 transition-all">
+                    <i class="fa-brands fa-pinterest text-xs"></i>
+                </a>
+                <a href="#" aria-label="LinkedIn" class="w-9 h-9 rounded-full bg-stone-900 border border-stone-800 flex items-center justify-center text-stone-400 hover:text-brand-500 hover:border-brand-500/40 transition-all">
+                    <i class="fa-brands fa-linkedin-in text-xs"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <div id="lightbox-modal" class="fixed inset-0 z-50 hidden bg-stone-950/95 backdrop-blur-xl flex flex-col justify-between p-4 sm:p-6 transition-opacity duration-300">
+        
+        <!-- Barra Superior de Lightbox -->
+        <div class="flex items-center justify-between z-10">
+            <div class="text-stone-400 text-xs font-medium tracking-wider uppercase flex items-center gap-2">
+                <span id="lightbox-counter" class="text-brand-500 font-bold">Imagen 1 de 1</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="downloadCurrentImage()" class="p-2.5 rounded-full bg-stone-900 border border-stone-800 text-stone-300 hover:text-white hover:border-stone-700 transition-colors" title="Abrir imagen completa">
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                </button>
+                <button onclick="closeLightbox()" class="p-2.5 rounded-full bg-stone-900 border border-stone-800 text-stone-300 hover:text-white hover:border-stone-700 transition-colors" title="Cerrar (Esc)">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Área Central de Imagen y Navegación -->
+        <div class="relative flex-grow flex items-center justify-center my-4 overflow-hidden">
+            <button onclick="prevPhoto()" class="absolute left-2 sm:left-6 z-20 p-3.5 rounded-full bg-stone-900/80 border border-stone-800 text-stone-300 hover:text-white transition-all backdrop-blur-md shadow-xl hover:scale-110">
+                <i class="fa-solid fa-chevron-left text-sm"></i>
+            </button>
+            <button onclick="nextPhoto()" class="absolute right-2 sm:right-6 z-20 p-3.5 rounded-full bg-stone-900/80 border border-stone-800 text-stone-300 hover:text-white transition-all backdrop-blur-md shadow-xl hover:scale-110">
+                <i class="fa-solid fa-chevron-right text-sm"></i>
+            </button>
+
+            <div class="max-h-full max-w-5xl flex flex-col items-center justify-center p-2">
+                <img id="lightbox-image" src="" alt="" class="max-h-[58vh] sm:max-h-[62vh] w-auto max-w-full object-contain rounded-xl shadow-2xl transition-all duration-300">
+                
+                <!-- Galería de Miniaturas -->
+                <div id="lightbox-thumbnails" class="flex items-center gap-2 mt-4 overflow-x-auto max-w-full py-1.5 px-2"></div>
+            </div>
+        </div>
+
+        <!-- Ficha Técnica del Proyecto en Lightbox -->
+        <div class="glass-card rounded-2xl p-5 max-w-4xl mx-auto w-full shadow-2xl">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span id="lightbox-category" class="bg-brand-500/20 border border-brand-500/30 text-brand-400 text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full">Categoría</span>
+                        <span id="lightbox-location" class="text-xs text-stone-400 flex items-center gap-1"><i class="fa-solid fa-location-dot text-stone-500"></i> Ubicación</span>
+                    </div>
+                    <h3 id="lightbox-title" class="font-serif text-lg sm:text-xl font-bold text-stone-100">Título del Proyecto</h3>
+                    <p id="lightbox-desc" class="text-xs sm:text-sm text-stone-400 font-light">Descripción de la obra.</p>
+                </div>
+
+                <!-- Especificaciones Técnicas -->
+                <div class="flex flex-wrap items-center gap-2 text-xs text-stone-300 border-t md:border-t-0 border-stone-800 pt-3 md:pt-0">
+                    <div class="bg-stone-950/80 px-3 py-1.5 rounded-xl border border-stone-800/80 flex items-center gap-2">
+                        <i class="fa-solid fa-tree text-brand-500"></i>
+                        <div>
+                            <span class="block text-[9px] uppercase tracking-wider text-stone-500">Madera</span>
+                            <span id="spec-wood" class="font-medium text-stone-200">--</span>
+                        </div>
+                    </div>
+                    <div class="bg-stone-950/80 px-3 py-1.5 rounded-xl border border-stone-800/80 flex items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles text-brand-500"></i>
+                        <div>
+                            <span class="block text-[9px] uppercase tracking-wider text-stone-500">Acabado</span>
+                            <span id="spec-finish" class="font-medium text-stone-200">--</span>
+                        </div>
+                    </div>
+                    <div class="bg-stone-950/80 px-3 py-1.5 rounded-xl border border-stone-800/80 flex items-center gap-2">
+                        <i class="fa-solid fa-screwdriver-wrench text-brand-500"></i>
+                        <div>
+                            <span class="block text-[9px] uppercase tracking-wider text-stone-500">Técnica</span>
+                            <span id="spec-craft" class="font-medium text-stone-200">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Colección de Datos de Proyectos
+        const projectsData = [
+            {
+                id: 1,
+                title: "Boiserie Integrada 'Velázquez'",
+                category: "Panelados & Boiseries",
+                location: "Barrio Salamanca, Madrid",
+                wood: "Roble Francés Ahumado",
+                finish: "Aceite Mate Natural",
+                craft: "Fresado Geométrico Rasante",
+                images: [
+                    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80"
+                ],
+                desc: "Panelado arquitectónico completo con puertas pivotantes integradas e iluminación escénica LED oculta."
+            },
+            {
+                id: 2,
+                title: "Mesa Escultórica 'Nebra'",
+                category: "Mobiliario a Medida",
+                location: "Madrid, España",
+                wood: "Nogal Español Seleccionado",
+                finish: "Cera Orgánica Efecto Seda",
+                craft: "Ensamble Cola de Milano Oculta",
+                images: [
+                    "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80"
+                ],
+                desc: "Pieza central tallada en tablones macizos de nogal centenario con veteado simétrico."
+            },
+            {
+                id: 3,
+                title: "Cocina de Autor 'Ebony & Brass'",
+                category: "Cocinas de Autor",
+                location: "La Moraleja, Madrid",
+                wood: "Ébano de Macasar & Latón",
+                finish: "Laca Mate de Alta Resistencia",
+                craft: "Casado de Vetas Holandés",
+                images: [
+                    "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&w=1200&q=80"
+                ],
+                desc: "Isla de cocina esculpida con frentes en ébano y tiradores encastrados en bronce cepillado."
+            },
+            {
+                id: 4,
+                title: "Vestidor Master 'Sartorial Oak'",
+                category: "Vestidores & Armarios",
+                location: "Marbella, Málaga",
+                wood: "Roble Smoked & Piel Nobuk",
+                finish: "Tratamiento Cera Natural",
+                craft: "Cajonería Ensamblada a Mano",
+                images: [
+                    "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1200&q=80"
+                ],
+                desc: "Vestidor walk-in personalizado con interiores acolchados y puertas de cristal estriado."
+            },
+            {
+                id: 5,
+                title: "Aparador Escultórico 'Aethel'",
+                category: "Mobiliario a Medida",
+                location: "Sotogrande, Cádiz",
+                wood: "Castaño Carbonizado",
+                finish: "Técnica Shou Sugi Ban",
+                craft: "Talla Orgánica Manual",
+                images: [
+                    "https://images.unsplash.com/photo-1532323544230-7191fd51bc1b?auto=format&fit=crop&w=1200&q=80"
+                ],
+                desc: "Superficie tratada mediante carbonización tradicional japonesa para resaltar la textura del veteado."
+            },
+            {
+                id: 6,
+                title: "Panelado Acústico 'Louver Acacia'",
+                category: "Panelados & Boiseries",
+                location: "Pedralbes, Barcelona",
+                wood: "Acacia & Listonado de Haya",
+                finish: "Barniz Ecológico Acrílico",
+                craft: "Listonado Acústico Continuo",
+                images: [
+                    "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1200&q=80"
+                ],
+                desc: "Revestimiento alistonado continuo con propiedades de absorción acústica para zonas de estar."
+            },
+            {
+                id: 7,
+                title: "Biblioteca Privada 'Cervantes'",
+                category: "Panelados & Boiseries",
+                location: "Almagro, Madrid",
+                wood: "Caoba & Detalles Dorado Pan de Oro",
+                finish: "Goma Laca a la Muñequilla",
+                craft: "Moldura Tradicional Clásica",
+                images: [
+                    "https://images.unsplash.com/photo-1541123437800-1bb1317badc2?auto=format&fit=crop&w=1200&q=80"
+                ],
+                desc: "Biblioteca de suelo a techo con escalera deslizante en bronce y librerías integradas."
+            },
+            {
+                id: 8,
+                title: "Isla de Cocina 'Nogal & Travertino'",
+                category: "Cocinas de Autor",
+                location: "Valencia, España",
+                wood: "Nogal Americano Macizo",
+                finish: "Hidrófugo Mate Cero Brillo",
+                craft: "Ensamble Biselado Oculto",
+                images: [
+                    "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1200&q=80"
+                ],
+                desc: "Combinación de nogal cálido con encimera de piedra travertino navona veteada."
+            },
+            {
+                id: 9,
+                title: "Consola Flotante 'Kintsugi'",
+                category: "Mobiliario a Medida",
+                location: "Bilbao, Vizcaya",
+                wood: "Olmo Silvestre Centenario",
+                finish: "Incrustación en Latón Líquido",
+                craft: "Corte Resina y Resaltado de Grieta",
+                images: [
+                    "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=80"
+                ],
+                desc: "Consola recibidor suspendida aprovechando la grieta natural de la madera realzada en oro."
+            }
+        ];
+
+        let activeCategory = "Todos";
+        let currentLightboxProjectIndex = 0;
+        let currentLightboxImageIndex = 0;
+
+        // Inicialización al cargar el DOM
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("current-year").textContent = new Date().getFullYear();
+            renderCategoryFilters();
+            renderGallery();
+
+            // Atajos de teclado para la galería lightbox
+            document.addEventListener("keydown", (e) => {
+                const lightbox = document.getElementById("lightbox-modal");
+                if (lightbox && !lightbox.classList.contains("hidden")) {
+                    if (e.key === "Escape") closeLightbox();
+                    if (e.key === "ArrowLeft") prevPhoto();
+                    if (e.key === "ArrowRight") nextPhoto();
+                }
+            });
+        });
+
+        // Renderizado de botones de categoría
+        function renderCategoryFilters() {
+            const categories = ["Todos", "Panelados & Boiseries", "Mobiliario a Medida", "Cocinas de Autor", "Vestidores & Armarios"];
+            const container = document.getElementById("category-filters");
+            container.innerHTML = categories.map(cat => `
+                <button onclick="setCategory('${cat}')" 
+                        class="px-4 py-2 rounded-full text-xs font-medium transition-all duration-300 ${
+                            activeCategory === cat 
+                            ? 'active-filter' 
+                            : 'bg-stone-900 border border-stone-800 text-stone-400 hover:border-stone-700 hover:text-stone-200'
+                        }">
+                    ${cat}
+                </button>
+            `).join("");
+        }
+
+        function setCategory(cat) {
+            activeCategory = cat;
+            renderCategoryFilters();
+            filterPhotos();
+        }
+
+        function getFilteredData() {
+            const query = (document.getElementById("search-input")?.value || "").toLowerCase().trim();
+            return projectsData.filter(p => {
+                const matchesCategory = activeCategory === "Todos" || p.category === activeCategory;
+                const matchesQuery = p.title.toLowerCase().includes(query) ||
+                                     p.wood.toLowerCase().includes(query) ||
+                                     p.location.toLowerCase().includes(query) ||
+                                     p.finish.toLowerCase().includes(query) ||
+                                     p.craft.toLowerCase().includes(query);
+                return matchesCategory && matchesQuery;
+            });
+        }
+
+        function renderGallery() {
+            const dataToRender = getFilteredData();
+            const container = document.getElementById("photos-container");
+            const emptyState = document.getElementById("empty-state");
+            const countEl = document.getElementById("project-count");
+
+            if (countEl) countEl.textContent = dataToRender.length;
+
+            if (dataToRender.length === 0) {
+                container.innerHTML = "";
+                emptyState.classList.remove("hidden");
+                return;
+            }
+
+            emptyState.classList.add("hidden");
+
+            container.innerHTML = dataToRender.map((project) => `
+                <div class="masonry-item group cursor-pointer" onclick="openLightbox(${project.id})">
+                    <div class="relative overflow-hidden rounded-2xl bg-stone-900 border border-stone-800/80 shadow-xl">
+                        <!-- Imagen -->
+                        <img src="${project.images[0]}" alt="${project.title}" class="w-full h-auto object-cover img-hover-zoom">
+                        
+                        <!-- Overlay Informativo en Hover -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-brand-400 bg-stone-950/80 border border-stone-800 backdrop-blur-md px-2.5 py-1 rounded-full w-max mb-2">
+                                ${project.category}
+                            </span>
+                            <h3 class="font-serif text-lg font-bold text-white leading-snug">${project.title}</h3>
+                            <p class="text-xs text-stone-300 flex items-center gap-1.5 mt-1 font-light">
+                                <i class="fa-solid fa-tree text-brand-500 text-[11px]"></i> ${project.wood}
+                            </p>
+                            <p class="text-[11px] text-stone-400 flex items-center gap-1.5 mt-0.5">
+                                <i class="fa-solid fa-location-dot text-stone-500 text-[10px]"></i> ${project.location}
+                            </p>
+                        </div>
+
+                        <!-- Badge discreto permanente -->
+                        <div class="absolute top-3 right-3 opacity-90 group-hover:opacity-0 transition-opacity">
+                            <span class="text-[9px] font-bold uppercase tracking-wider text-stone-300 bg-stone-950/70 border border-stone-800 backdrop-blur-md px-2.5 py-1 rounded-full">
+                                ${project.images.length} foto${project.images.length > 1 ? 's' : ''}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function filterPhotos() {
+            const searchInput = document.getElementById("search-input");
+            const clearBtn = document.getElementById("clear-search-btn");
+            if (searchInput && clearBtn) {
+                if (searchInput.value.length > 0) {
+                    clearBtn.classList.remove("hidden");
+                } else {
+                    clearBtn.classList.add("hidden");
+                }
+            }
+            renderGallery();
+        }
+
+        function clearSearch() {
+            const searchInput = document.getElementById("search-input");
+            if (searchInput) searchInput.value = "";
+            filterPhotos();
+        }
+
+        function resetFilters() {
+            clearSearch();
+            activeCategory = "Todos";
+            renderCategoryFilters();
+            renderGallery();
+        }
+
+        // Lógica de Lightbox
+        function openLightbox(projectId) {
+            currentLightboxProjectIndex = projectsData.findIndex(p => p.id === projectId);
+            if (currentLightboxProjectIndex === -1) return;
+
+            currentLightboxImageIndex = 0;
+            updateLightboxContent();
+
+            document.getElementById("lightbox-modal").classList.remove("hidden");
+            document.body.style.overflow = "hidden";
+        }
+
+        function updateLightboxContent() {
+            const project = projectsData[currentLightboxProjectIndex];
+
+            const imgEl = document.getElementById("lightbox-image");
+            imgEl.style.opacity = '0.4';
+            setTimeout(() => {
+                imgEl.src = project.images[currentLightboxImageIndex];
+                imgEl.style.opacity = '1';
+            }, 100);
+
+            document.getElementById("lightbox-title").textContent = project.title;
+            document.getElementById("lightbox-category").textContent = project.category;
+            document.getElementById("lightbox-location").innerHTML = `<i class="fa-solid fa-location-dot text-stone-500"></i> ${project.location}`;
+            document.getElementById("lightbox-desc").textContent = project.desc;
+            document.getElementById("lightbox-counter").textContent = `Imagen ${currentLightboxImageIndex + 1} de ${project.images.length}`;
+
+            document.getElementById("spec-wood").textContent = project.wood;
+            document.getElementById("spec-finish").textContent = project.finish;
+            document.getElementById("spec-craft").textContent = project.craft;
+
+            // Renderizado de Miniaturas
+            const thumbContainer = document.getElementById("lightbox-thumbnails");
+            if (project.images.length > 1) {
+                thumbContainer.innerHTML = project.images.map((img, idx) => `
+                    <button onclick="setLightboxImage(${idx})" class="w-12 h-12 rounded-lg overflow-hidden border-2 transition-all duration-300 ${idx === currentLightboxImageIndex ? 'border-brand-500 scale-105 shadow-md' : 'border-stone-800 opacity-50 hover:opacity-100'}">
+                        <img src="${img}" class="w-full h-full object-cover">
+                    </button>
+                `).join("");
+            } else {
+                thumbContainer.innerHTML = "";
+            }
+        }
+
+        function setLightboxImage(idx) {
+            currentLightboxImageIndex = idx;
+            updateLightboxContent();
+        }
+
+        function prevPhoto() {
+            const project = projectsData[currentLightboxProjectIndex];
+            if (currentLightboxImageIndex > 0) {
+                currentLightboxImageIndex--;
+            } else {
+                currentLightboxProjectIndex = (currentLightboxProjectIndex - 1 + projectsData.length) % projectsData.length;
+                currentLightboxImageIndex = projectsData[currentLightboxProjectIndex].images.length - 1;
+            }
+            updateLightboxContent();
+        }
+
+        function nextPhoto() {
+            const project = projectsData[currentLightboxProjectIndex];
+            if (currentLightboxImageIndex < project.images.length - 1) {
+                currentLightboxImageIndex++;
+            } else {
+                currentLightboxProjectIndex = (currentLightboxProjectIndex + 1) % projectsData.length;
+                currentLightboxImageIndex = 0;
+            }
+            updateLightboxContent();
+        }
+
+        function closeLightbox() {
+            document.getElementById("lightbox-modal").classList.add("hidden");
+            document.body.style.overflow = "auto";
+        }
+
+        function downloadCurrentImage() {
+            const url = projectsData[currentLightboxProjectIndex].images[currentLightboxImageIndex];
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
