@@ -1,202 +1,568 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="dark scroll-smooth">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mi Portfolio de Proyectos</title>
-  
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      background-color: #f4f6f9;
-      color: #333;
-      padding: 2rem;
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 2rem;
-      color: #1a1a1a;
-    }
-
-    /* Loader */
-    #loading {
-      text-align: center;
-      font-size: 1.2rem;
-      color: #666;
-      margin-top: 3rem;
-    }
-
-    /* Rejilla de proyectos (Cards) */
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    /* Estilo del Card */
-    .card {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .card-title {
-      padding: 1rem 1.2rem;
-      font-size: 1.25rem;
-      font-weight: 600;
-      border-bottom: 1px solid #eee;
-      background: #fafafa;
-    }
-
-    /* Estilo del Carrusel */
-    .carousel-container {
-      position: relative;
-      width: 100%;
-      height: 240px;
-      background-color: #000;
-      overflow: hidden;
-    }
-
-    .carousel-slide {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: none;
-    }
-
-    .carousel-slide.active {
-      display: block;
-    }
-
-    /* Botones de navegación del carrusel */
-    .carousel-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(0, 0, 0, 0.5);
-      color: white;
-      border: none;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1.2rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-    }
-
-    .carousel-btn:hover {
-      background: rgba(0, 0, 0, 0.8);
-    }
-
-    .carousel-btn.prev { left: 10px; }
-    .carousel-btn.next { right: 10px; }
-
-    /* Indicador de número de foto */
-    .carousel-counter {
-      position: absolute;
-      bottom: 8px;
-      right: 12px;
-      background: rgba(0, 0, 0, 0.6);
-      color: white;
-      font-size: 0.75rem;
-      padding: 3px 8px;
-      border-radius: 10px;
-    }
-  </style>
-</head>
-<body>
-
-  <h1>Galería de Proyectos</h1>
-
-  <div id="loading">Cargando proyectos desde Google Drive...</div>
-  <div id="projects-container" class="projects-grid"></div>
-
-  <script>
-    // SUSTITUYE ESTA URL POR LA URL DE TU DESPLIEGUE DE GOOGLE APPS SCRIPT
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwWXvG0HIVb-P3JC_4Gcc5SX0tGsRerdRHVVdFmn0jb1HBTxjonac8xFYRE35uYWzo/exec";
-
-    async function loadProjects() {
-      const container = document.getElementById("projects-container");
-      const loading = document.getElementById("loading");
-
-      try {
-        const response = await fetch(APPS_SCRIPT_URL);
-        const data = await response.json();
-
-        if (data.status !== "success") {
-          throw new Error(data.message || "Error al obtener datos");
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería de Proyectos | Valverde & Co. Ebanistería</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#faf7f2',
+                            100: '#f3ece0',
+                            500: '#c59b63', /* Bronce/Madera noble */
+                            600: '#b0834c',
+                            900: '#1c1917',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
         }
+    </script>
+    
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        loading.style.display = "none";
+    <style>
+        /* Personalización de Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0c0a09; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
 
-        // Iterar sobre cada carpeta/proyecto devuelto por el script
-        data.projects.forEach((project, index) => {
-          if (project.images.length === 0) return; // Omitir carpetas vacías
+        /* Masonry Grid Layout */
+        .masonry-grid {
+            column-count: 1;
+            column-gap: 1.5rem;
+        }
+        @media (min-width: 640px) { .masonry-grid { column-count: 2; } }
+        @media (min-width: 1024px) { .masonry-grid { column-count: 3; } }
+        .masonry-item { break-inside: avoid; margin-bottom: 1.5rem; }
 
-          const card = document.createElement("div");
-          card.className = "card";
+        /* Zoom en Hover */
+        .img-hover-zoom {
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .masonry-item:hover .img-hover-zoom {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-stone-950 text-stone-100 font-sans antialiased selection:bg-brand-500 selection:text-stone-950 min-h-screen flex flex-col">
 
-          // Generar HTML del carrusel
-          let imagesHTML = "";
-          project.images.forEach((img, i) => {
-            imagesHTML += `<img class="carousel-slide ${i === 0 ? 'active' : ''}" data-index="${i}" src="${img.url}" alt="${img.name}" loading="lazy" />`;
-          });
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 bg-stone-950/90 backdrop-blur-md border-b border-stone-800/80 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Logo Brand -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-full bg-stone-900 border border-brand-500/40 flex items-center justify-center text-brand-500 font-serif font-bold text-xl group-hover:border-brand-500 transition-colors">
+                    <i class="fa-solid fa-compass-drafting text-sm"></i>
+                </div>
+                <div>
+                    <span class="font-serif text-xl sm:text-2xl font-bold tracking-tight text-stone-100 group-hover:text-brand-500 transition-colors">VALVERDE & CO.</span>
+                    <span class="block text-[10px] uppercase tracking-widest text-stone-400 font-sans">Ebanistería & Interiorismo</span>
+                </div>
+            </a>
 
-          const showControls = project.images.length > 1;
-
-          card.innerHTML = `
-            <div class="carousel-container" id="carousel-${index}">
-              ${imagesHTML}
-              ${showControls ? `
-                <button class="carousel-btn prev" onclick="moveSlide(${index}, -1)">&#10094;</button>
-                <button class="carousel-btn next" onclick="moveSlide(${index}, 1)">&#10095;</button>
-                <div class="carousel-counter"><span class="current-index">1</span>/${project.images.length}</div>
-              ` : ''}
+            <!-- Badge de estado de API -->
+            <div id="api-status-badge" class="hidden sm:flex items-center gap-2 text-xs bg-stone-900 border border-stone-800 px-3 py-1.5 rounded-full text-stone-400">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span id="api-status-text">Conectando a Drive...</span>
             </div>
-            <div class="card-title">${project.projectName}</div>
-          `;
+        </div>
+    </header>
 
-          container.appendChild(card);
+    <!-- Main Content: Galería de Proyectos -->
+    <main class="flex-grow py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+        
+        <!-- Gallery Header Banner -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 pb-6 border-b border-stone-800">
+            <div>
+                <div class="flex items-center gap-2 text-brand-500 text-xs font-semibold uppercase tracking-widest mb-1">
+                    <i class="fa-solid fa-border-all"></i>
+                    <span>Catálogo Arquitectónico</span>
+                </div>
+                <h1 class="font-serif text-3xl sm:text-4xl font-bold text-stone-100">Galería de Proyectos</h1>
+                <p class="text-stone-400 text-sm mt-1">Explore nuestra selección de obras en madera noble, panelados a medida y mobiliario de autor.</p>
+            </div>
+
+            <div class="text-xs text-stone-400">
+                Mostrando <span id="project-count" class="text-brand-500 font-bold">0</span> proyectos
+            </div>
+        </div>
+
+        <!-- Filters & Search Toolbar -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+            <!-- Categorías -->
+            <div class="flex flex-wrap items-center gap-2" id="category-filters">
+                <!-- Renderizado dinámico por JavaScript -->
+            </div>
+
+            <!-- Buscador en tiempo real -->
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <div class="relative flex-grow md:w-72">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-500 text-xs"></i>
+                    <input type="text" id="search-input" oninput="filterPhotos()" placeholder="Buscar madera, acabado o proyecto..." 
+                           class="w-full bg-stone-900 border border-stone-800 rounded-full pl-9 pr-4 py-2 text-sm text-stone-200 placeholder-stone-500 focus:outline-none focus:border-brand-500 transition-colors">
+                </div>
+            </div>
+        </div>
+
+        <!-- Componente Loader / Cargando -->
+        <div id="loading-state" class="py-24 text-center space-y-4">
+            <div class="w-12 h-12 border-4 border-brand-500/20 border-t-brand-500 rounded-full animate-spin mx-auto"></div>
+            <p class="text-stone-400 text-sm tracking-wide">Cargando proyectos desde Google Drive...</p>
+        </div>
+
+        <!-- Container Grid de Fotos / Proyectos -->
+        <div id="photos-container" class="masonry-grid min-h-[400px] hidden">
+            <!-- Renderizado dinámico con JS -->
+        </div>
+
+        <!-- Mensaje cuando no hay resultados -->
+        <div id="empty-state" class="hidden py-20 text-center space-y-4">
+            <div class="w-16 h-16 rounded-full bg-stone-900 border border-stone-800 flex items-center justify-center mx-auto text-stone-500 text-2xl">
+                <i class="fa-solid fa-tree"></i>
+            </div>
+            <h3 class="text-lg font-medium text-stone-300">No se encontraron proyectos</h3>
+            <p class="text-stone-500 text-sm max-w-md mx-auto">Intenta ajustar los criterios de búsqueda o cambiar de categoría.</p>
+            <button onclick="resetFilters()" class="text-brand-500 text-sm font-semibold hover:underline">Restablecer Filtros</button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stone-950 border-t border-stone-900 py-10 px-4 sm:px-6 lg:px-8 mt-12">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="text-center md:text-left">
+                <span class="font-serif font-bold text-lg text-stone-200">VALVERDE & CO.</span>
+                <p class="text-xs text-stone-500 mt-1">© <span id="current-year"></span> Todos los derechos reservados. Ebanistería Fina e Interiorismo.</p>
+            </div>
+
+            <div class="flex items-center gap-4 text-stone-400">
+                <a href="#" class="w-8 h-8 rounded-full bg-stone-900 border border-stone-800 flex items-center justify-center hover:text-brand-500 transition-colors"><i class="fa-brands fa-instagram text-xs"></i></a>
+                <a href="#" class="w-8 h-8 rounded-full bg-stone-900 border border-stone-800 flex items-center justify-center hover:text-brand-500 transition-colors"><i class="fa-brands fa-pinterest text-xs"></i></a>
+                <a href="#" class="w-8 h-8 rounded-full bg-stone-900 border border-stone-800 flex items-center justify-center hover:text-brand-500 transition-colors"><i class="fa-brands fa-linkedin-in text-xs"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ================================================================= -->
+    <!-- POP-UP MODAL: LIGHTBOX / DETALLE DEL PROYECTO                     -->
+    <!-- ================================================================= -->
+    <div id="lightbox-modal" class="fixed inset-0 z-50 hidden bg-stone-950/95 backdrop-blur-xl flex flex-col justify-between p-4 sm:p-6 transition-opacity duration-300">
+        
+        <div class="flex items-center justify-between z-10">
+            <div class="text-stone-300 text-xs sm:text-sm font-medium" id="lightbox-counter">Imagen 1 de 1</div>
+            <div class="flex items-center gap-3">
+                <button onclick="downloadCurrentImage()" class="p-2.5 rounded-full bg-stone-900 border border-stone-800 text-stone-300 hover:text-white transition-colors" title="Abrir imagen completa">
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                </button>
+                <button onclick="closeLightbox()" class="p-2.5 rounded-full bg-stone-900 border border-stone-800 text-stone-300 hover:text-white transition-colors">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="relative flex-grow flex items-center justify-center my-4 overflow-hidden">
+            <button onclick="prevPhoto()" class="absolute left-2 sm:left-6 z-20 p-3.5 rounded-full bg-stone-900/80 border border-stone-800 text-stone-300 hover:text-white transition-all backdrop-blur-md">
+                <i class="fa-solid fa-chevron-left text-sm"></i>
+            </button>
+            <button onclick="nextPhoto()" class="absolute right-2 sm:right-6 z-20 p-3.5 rounded-full bg-stone-900/80 border border-stone-800 text-stone-300 hover:text-white transition-all backdrop-blur-md">
+                <i class="fa-solid fa-chevron-right text-sm"></i>
+            </button>
+
+            <div class="max-h-full max-w-5xl flex flex-col items-center justify-center p-2">
+                <img id="lightbox-image" src="" alt="" class="max-h-[60vh] sm:max-h-[65vh] w-auto max-w-full object-contain rounded-lg shadow-2xl">
+                <div id="lightbox-thumbnails" class="flex items-center gap-2 mt-4 overflow-x-auto max-w-full py-1"></div>
+            </div>
+        </div>
+
+        <!-- Ficha Técnica del Proyecto en Lightbox -->
+        <div class="bg-stone-900/90 border border-stone-800 rounded-2xl p-4 sm:p-5 max-w-4xl mx-auto w-full backdrop-blur-md">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span id="lightbox-category" class="bg-brand-500/20 text-brand-500 text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full">Categoría</span>
+                        <span id="lightbox-location" class="text-xs text-stone-400 flex items-center gap-1"><i class="fa-solid fa-location-dot"></i> Ubicación</span>
+                    </div>
+                    <h3 id="lightbox-title" class="font-serif text-lg sm:text-xl font-bold text-stone-100">Título del Proyecto</h3>
+                    <p id="lightbox-desc" class="text-xs text-stone-400 mt-1 font-light">Descripción de la obra.</p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2 text-xs text-stone-300 border-t md:border-t-0 border-stone-800 pt-3 md:pt-0">
+                    <div class="bg-stone-950 px-3 py-1.5 rounded-lg border border-stone-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-tree text-brand-500"></i>
+                        <span id="spec-wood">Madera</span>
+                    </div>
+                    <div class="bg-stone-950 px-3 py-1.5 rounded-lg border border-stone-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-wand-magic-sparkles text-brand-500"></i>
+                        <span id="spec-finish">Acabado</span>
+                    </div>
+                    <div class="bg-stone-950 px-3 py-1.5 rounded-lg border border-stone-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-screwdriver-wrench text-brand-500"></i>
+                        <span id="spec-craft">Ensamble</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // =========================================================================
+        // CONFIGURACIÓN DE TU REST API (Google Apps Script)
+        // Sustituye la URL por la URL de tu despliegue de Apps Script cuando esté lista.
+        // =========================================================================
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwWXvG0HIVb-P3JC_4Gcc5SX0tGsRerdRHVVdFmn0jb1HBTxjonac8xFYRE35uYWzo/exec";
+
+        // Proyectos de respaldo (Fallback) en caso de que la URL no esté configurada o la API falle
+        const fallbackProjectsData = [
+            {
+                id: 1,
+                title: "Boiserie Integrada 'Velázquez'",
+                category: "Panelados & Boiseries",
+                location: "Barrio Salamanca, Madrid",
+                wood: "Roble Francés Ahumado",
+                finish: "Aceite Mate Natural",
+                craft: "Fresado Geométrico Rasante",
+                images: [
+                    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80"
+                ],
+                desc: "Panelado arquitectónico completo con puertas pivotantes integradas e iluminación escénica LED oculta."
+            },
+            {
+                id: 2,
+                title: "Mesa Escultórica 'Nebra'",
+                category: "Mobiliario a Medida",
+                location: "Madrid, España",
+                wood: "Nogal Español Seleccionado",
+                finish: "Cera Orgánica Efecto Seda",
+                craft: "Ensamble Cola de Milano Oculta",
+                images: [
+                    "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80"
+                ],
+                desc: "Pieza central tallada a mano en tablones macizos de nogal centenario con veteado simétrico."
+            },
+            {
+                id: 3,
+                title: "Cocina de Autor 'Ebony & Brass'",
+                category: "Cocinas de Autor",
+                location: "La Moraleja, Madrid",
+                wood: "Ébano de Macasar & Latón",
+                finish: "Laca Mate de Alta Resistencia",
+                craft: "Casado de Vetas Holandés",
+                images: [
+                    "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&w=1200&q=80"
+                ],
+                desc: "Isla de cocina esculpida con frentes en ébano y tiradores encastrados en bronce cepillado."
+            },
+            {
+                id: 4,
+                title: "Vestidor Master 'Sartorial Oak'",
+                category: "Vestidores & Armarios",
+                location: "Marbella, Málaga",
+                wood: "Roble Smoked & Piel Nobuk",
+                finish: "Tratamiento Cera Natural",
+                craft: "Cajonería Ensamblada a Mano",
+                images: [
+                    "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1200&q=80"
+                ],
+                desc: "Vestidor walk-in personalizado con interiores acolchados y puertas de cristal estriado."
+            },
+            {
+                id: 5,
+                title: "Aparador Escultórico 'Aethel'",
+                category: "Mobiliario a Medida",
+                location: "Sotogrande, Cádiz",
+                wood: "Castaño Centenario Carbonizado",
+                finish: "Técnica Shou Sugi Ban",
+                craft: "Talla Orgánica Manual",
+                images: [
+                    "https://images.unsplash.com/photo-1532323544230-7191fd51bc1b?auto=format&fit=crop&w=1200&q=80"
+                ],
+                desc: "Superficie tratada mediante carbonización tradicional japonesa para resaltar la textura del veteado."
+            },
+            {
+                id: 6,
+                title: "Panelado 'Louver Acacia'",
+                category: "Panelados & Boiseries",
+                location: "Pedralbes, Barcelona",
+                wood: "Acacia & Listonado de Haya",
+                finish: "Barniz Ecológico Acrílico",
+                craft: "Listonado Acústico Continuo",
+                images: [
+                    "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1200&q=80"
+                ],
+                desc: "Revestimiento alistonado continuo con propiedades de absorción acústica para zonas de estar."
+            }
+        ];
+
+        let projectsData = [];
+        let availableCategories = ["Todos"];
+        let activeCategory = "Todos";
+        let currentLightboxProjectIndex = 0;
+        let currentLightboxImageIndex = 0;
+
+        // Inicialización
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("current-year").textContent = new Date().getFullYear();
+            loadProjectsFromAPI();
         });
 
-      } catch (error) {
-        console.error(error);
-        loading.innerText = "Error cargando las imágenes del portfolio. Revisa la consola o la configuración de Apps Script.";
-      }
-    }
+        // Carga dinámicamente los proyectos desde la REST API
+        async function loadProjectsFromAPI() {
+            const loadingState = document.getElementById("loading-state");
+            const photosContainer = document.getElementById("photos-container");
+            const statusBadge = document.getElementById("api-status-badge");
+            const statusText = document.getElementById("api-status-text");
 
-    // Función para cambiar de imagen en el carrusel de una card específica
-    function moveSlide(cardIndex, direction) {
-      const container = document.getElementById(`carousel-${cardIndex}`);
-      const slides = container.querySelectorAll('.carousel-slide');
-      const counter = container.querySelector('.current-index');
-      
-      let activeIndex = Array.from(slides).findIndex(slide => slide.classList.contains('active'));
-      slides[activeIndex].classList.remove('active');
+            if (statusBadge) statusBadge.classList.remove("hidden");
 
-      activeIndex = (activeIndex + direction + slides.length) % slides.length;
+            // Comprobar si se especificó una URL real
+            if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === "TU_URL_DE_APPS_SCRIPT_AQUI") {
+                console.warn("APPS_SCRIPT_URL no configurada. Usando catálogo de respaldo.");
+                if (statusText) statusText.textContent = "Catálogo Local (Fallback)";
+                projectsData = fallbackProjectsData;
+                finishLoading();
+                return;
+            }
 
-      slides[activeIndex].classList.add('active');
-      if (counter) counter.innerText = activeIndex + 1;
-    }
+            try {
+                if (statusText) statusText.textContent = "Cargando desde Google Drive...";
+                const response = await fetch(APPS_SCRIPT_URL);
+                const data = await response.json();
 
-    // Cargar los proyectos al iniciar la página
-    window.addEventListener("DOMContentLoaded", loadProjects);
-  </script>
+                if (data.status === "success" && Array.isArray(data.projects) && data.projects.length > 0) {
+                    // Mapeo y normalización de la estructura proveniente de Google Apps Script
+                    projectsData = data.projects
+                        .filter(p => p.images && p.images.length > 0)
+                        .map((p, index) => {
+                            // Extrae URLs de las imágenes (soporta array de objetos {url} o strings directos)
+                            const imageUrls = p.images.map(img => typeof img === 'object' ? (img.url || img.src) : img);
+
+                            return {
+                                id: index + 1,
+                                title: p.projectName || p.title || `Proyecto ${index + 1}`,
+                                category: p.category || "Proyectos Ebanistería",
+                                location: p.location || "España",
+                                wood: p.wood || "Madera Noble",
+                                finish: p.finish || "Acabado Artesanal",
+                                craft: p.craft || "Ebanistería de Autor",
+                                images: imageUrls,
+                                desc: p.desc || p.description || "Proyecto de ebanistería realizado con acabados de alta calidad."
+                            };
+                        });
+
+                    if (statusText) statusText.textContent = `Google Drive Conectado (${projectsData.length})`;
+                } else {
+                    throw new Error(data.message || "Respuesta sin proyectos válidos.");
+                }
+            } catch (error) {
+                console.error("Error al cargar desde API:", error);
+                if (statusText) statusText.textContent = "Error de conexión (Usando catálogo local)";
+                projectsData = fallbackProjectsData;
+            } finally {
+                finishLoading();
+            }
+        }
+
+        function finishLoading() {
+            const loadingState = document.getElementById("loading-state");
+            const photosContainer = document.getElementById("photos-container");
+
+            loadingState.classList.add("hidden");
+            photosContainer.classList.remove("hidden");
+
+            buildDynamicCategories();
+            renderCategoryFilters();
+            renderGallery();
+        }
+
+        // Extraer categorías únicas de los proyectos cargados
+        function buildDynamicCategories() {
+            const cats = new Set(projectsData.map(p => p.category).filter(Boolean));
+            availableCategories = ["Todos", ...Array.from(cats)];
+        }
+
+        // Filtros de Categorías
+        function renderCategoryFilters() {
+            const container = document.getElementById("category-filters");
+            container.innerHTML = availableCategories.map(cat => `
+                <button onclick="setCategory('${cat}')" 
+                        class="px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
+                            activeCategory === cat 
+                            ? 'bg-brand-500 text-stone-950 font-semibold shadow-md' 
+                            : 'bg-stone-900 border border-stone-800 text-stone-300 hover:border-stone-700 hover:text-white'
+                        }">
+                    ${cat}
+                </button>
+            `).join("");
+        }
+
+        function setCategory(cat) {
+            activeCategory = cat;
+            renderCategoryFilters();
+            filterPhotos();
+        }
+
+        function getFilteredData() {
+            const query = (document.getElementById("search-input")?.value || "").toLowerCase();
+            return projectsData.filter(p => {
+                const matchesCategory = activeCategory === "Todos" || p.category === activeCategory;
+                const matchesQuery = p.title.toLowerCase().includes(query) ||
+                                     p.wood.toLowerCase().includes(query) ||
+                                     p.location.toLowerCase().includes(query) ||
+                                     p.finish.toLowerCase().includes(query) ||
+                                     p.category.toLowerCase().includes(query);
+                return matchesCategory && matchesQuery;
+            });
+        }
+
+        function renderGallery() {
+            const dataToRender = getFilteredData();
+            const container = document.getElementById("photos-container");
+            const emptyState = document.getElementById("empty-state");
+            const countEl = document.getElementById("project-count");
+
+            if (countEl) countEl.textContent = dataToRender.length;
+
+            if (dataToRender.length === 0) {
+                container.innerHTML = "";
+                emptyState.classList.remove("hidden");
+                return;
+            }
+
+            emptyState.classList.add("hidden");
+
+            container.innerHTML = dataToRender.map((project) => `
+                <div class="masonry-item group cursor-pointer" onclick="openLightbox(${project.id})">
+                    <div class="relative overflow-hidden rounded-2xl bg-stone-900 border border-stone-800 shadow-lg">
+                        <img src="${project.images[0]}" alt="${project.title}" class="w-full h-auto object-cover img-hover-zoom">
+                        
+                        ${project.images.length > 1 ? `
+                            <div class="absolute top-3 right-3 bg-stone-950/80 backdrop-blur-md border border-stone-800 text-stone-200 text-[11px] px-2.5 py-1 rounded-full flex items-center gap-1.5">
+                                <i class="fa-solid fa-layer-group text-brand-500 text-[10px]"></i>
+                                <span>${project.images.length} fotos</span>
+                            </div>
+                        ` : ''}
+
+                        <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-brand-500 bg-stone-950/80 backdrop-blur-md px-2.5 py-1 rounded-full w-max mb-2">
+                                ${project.category}
+                            </span>
+                            <h3 class="font-serif text-lg font-bold text-white leading-snug">${project.title}</h3>
+                            <p class="text-xs text-stone-300 flex items-center gap-1 mt-1">
+                                <i class="fa-solid fa-tree text-brand-500"></i> ${project.wood}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function filterPhotos() {
+            renderGallery();
+        }
+
+        function resetFilters() {
+            document.getElementById("search-input").value = "";
+            activeCategory = "Todos";
+            renderCategoryFilters();
+            renderGallery();
+        }
+
+        // Lightbox Modal
+        function openLightbox(projectId) {
+            currentLightboxProjectIndex = projectsData.findIndex(p => p.id === projectId);
+            if (currentLightboxProjectIndex === -1) return;
+
+            currentLightboxImageIndex = 0;
+            updateLightboxContent();
+
+            document.getElementById("lightbox-modal").classList.remove("hidden");
+            document.body.style.overflow = "hidden";
+        }
+
+        function updateLightboxContent() {
+            const project = projectsData[currentLightboxProjectIndex];
+
+            document.getElementById("lightbox-image").src = project.images[currentLightboxImageIndex];
+            document.getElementById("lightbox-title").textContent = project.title;
+            document.getElementById("lightbox-category").textContent = project.category;
+            document.getElementById("lightbox-location").innerHTML = `<i class="fa-solid fa-location-dot"></i> ${project.location}`;
+            document.getElementById("lightbox-desc").textContent = project.desc;
+            document.getElementById("lightbox-counter").textContent = `Imagen ${currentLightboxImageIndex + 1} de ${project.images.length}`;
+
+            document.getElementById("spec-wood").textContent = project.wood;
+            document.getElementById("spec-finish").textContent = project.finish;
+            document.getElementById("spec-craft").textContent = project.craft;
+
+            const thumbContainer = document.getElementById("lightbox-thumbnails");
+            if (project.images.length > 1) {
+                thumbContainer.innerHTML = project.images.map((img, idx) => `
+                    <button onclick="setLightboxImage(${idx})" class="w-12 h-12 rounded-lg overflow-hidden border-2 transition-all ${idx === currentLightboxImageIndex ? 'border-brand-500 scale-105' : 'border-stone-800 opacity-60 hover:opacity-100'}">
+                        <img src="${img}" class="w-full h-full object-cover">
+                    </button>
+                `).join("");
+            } else {
+                thumbContainer.innerHTML = "";
+            }
+        }
+
+        function setLightboxImage(idx) {
+            currentLightboxImageIndex = idx;
+            updateLightboxContent();
+        }
+
+        function prevPhoto() {
+            const project = projectsData[currentLightboxProjectIndex];
+            if (currentLightboxImageIndex > 0) {
+                currentLightboxImageIndex--;
+            } else {
+                currentLightboxProjectIndex = (currentLightboxProjectIndex - 1 + projectsData.length) % projectsData.length;
+                currentLightboxImageIndex = projectsData[currentLightboxProjectIndex].images.length - 1;
+            }
+            updateLightboxContent();
+        }
+
+        function nextPhoto() {
+            const project = projectsData[currentLightboxProjectIndex];
+            if (currentLightboxImageIndex < project.images.length - 1) {
+                currentLightboxImageIndex++;
+            } else {
+                currentLightboxProjectIndex = (currentLightboxProjectIndex + 1) % projectsData.length;
+                currentLightboxImageIndex = 0;
+            }
+            updateLightboxContent();
+        }
+
+        function closeLightbox() {
+            document.getElementById("lightbox-modal").classList.add("hidden");
+            document.body.style.overflow = "auto";
+        }
+
+        function downloadCurrentImage() {
+            const url = projectsData[currentLightboxProjectIndex].images[currentLightboxImageIndex];
+            window.open(url, '_blank');
+        }
+    </script>
 </body>
 </html>
