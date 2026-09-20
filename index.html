@@ -16,7 +16,7 @@
                         brand: {
                             50: '#faf7f2',
                             100: '#f3ece0',
-                            500: '#c59b63', /* Bronce/Madera noble */
+                            500: '#c59b63',
                             600: '#b0834c',
                             900: '#1c1917',
                         }
@@ -67,7 +67,7 @@
     <header class="sticky top-0 z-40 bg-stone-950/90 backdrop-blur-md border-b border-stone-800/80 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             
-            <!-- Logo Brand en Esquina Superior Izquierda -->
+            <!-- Logo Brand -->
             <a href="#" class="flex items-center gap-3 group">
                 <div class="w-12 h-12 rounded-full overflow-hidden border border-brand-500/40 group-hover:border-brand-500 transition-colors flex items-center justify-center bg-stone-900 p-1">
                     <img 
@@ -213,27 +213,14 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             const currentYearEl = document.getElementById("current-year");
-            if (currentYearEl) currentYearEl.textContent = new Date().getFullYear();
+            if (currentYearEl) {
+                currentYearEl.textContent = new Date().getFullYear();
+            }
             loadProjectsFromAPI();
         });
 
         async function loadProjectsFromAPI() {
-            const loadingState = document.getElementById("loading-state");
-            const photosContainer = document.getElementById("photos-container");
-            const statusBadge = document.getElementById("api-status-badge");
-            const statusText = document.getElementById("api-status-text");
-
-            if (statusBadge) statusBadge.classList.remove("hidden");
-
-            if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("TU_URL")) {
-                if (statusText) statusText.textContent = "Catálogo Local (Fallback)";
-                projectsData = fallbackProjectsData;
-                finishLoading();
-                return;
-            }
-
             try {
-                if (statusText) statusText.textContent = "Cargando desde Google Drive...";
                 const response = await fetch(APPS_SCRIPT_URL);
                 const data = await response.json();
 
@@ -260,16 +247,14 @@
                                 desc: p.desc || p.description || "Proyecto de ebanistería realizado con acabados de alta calidad."
                             };
                         });
-
-                    if (statusText) statusText.textContent = `Google Drive Conectado (${projectsData.length})`;
                 } else {
-                    throw new Error(data.message || "Respuesta sin proyectos válidos.");
+                    projectsData = fallbackProjectsData;
                 }
             } catch (error) {
                 console.error("Error al cargar desde API:", error);
-                if (statusText) statusText.textContent = "Error de conexión (Usando catálogo local)";
                 projectsData = fallbackProjectsData;
             } finally {
+                // Se ejecuta SIEMPRE para asegurar que los proyectos se muestren
                 finishLoading();
             }
         }
@@ -316,11 +301,11 @@
             const query = (document.getElementById("search-input")?.value || "").toLowerCase();
             return projectsData.filter(p => {
                 const matchesCategory = activeCategory === "Todos" || p.category === activeCategory;
-                const matchesQuery = p.title.toLowerCase().includes(query) ||
-                                     p.wood.toLowerCase().includes(query) ||
-                                     p.location.toLowerCase().includes(query) ||
-                                     p.finish.toLowerCase().includes(query) ||
-                                     p.category.toLowerCase().includes(query);
+                const matchesQuery = (p.title || "").toLowerCase().includes(query) ||
+                                     (p.wood || "").toLowerCase().includes(query) ||
+                                     (p.location || "").toLowerCase().includes(query) ||
+                                     (p.finish || "").toLowerCase().includes(query) ||
+                                     (p.category || "").toLowerCase().includes(query);
                 return matchesCategory && matchesQuery;
             });
         }
@@ -395,33 +380,13 @@
 
         function updateLightboxContent() {
             const project = projectsData[currentLightboxProjectIndex];
+            if (!project) return;
 
             const imgEl = document.getElementById("lightbox-image");
-            if (imgEl) imgEl.src = project.images[currentLightboxImageIndex];
-
-            const titleEl = document.getElementById("lightbox-title");
-            if (titleEl) titleEl.textContent = project.title;
-
-            const catEl = document.getElementById("lightbox-category");
-            if (catEl) catEl.textContent = project.category;
-
-            const locEl = document.getElementById("lightbox-location");
-            if (locEl) locEl.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${project.location}`;
-
-            const descEl = document.getElementById("lightbox-desc");
-            if (descEl) descEl.textContent = project.desc;
+            if (imgEl) imgEl.src = project.images[currentLightboxImageIndex] || "";
 
             const counterEl = document.getElementById("lightbox-counter");
             if (counterEl) counterEl.textContent = `Imagen ${currentLightboxImageIndex + 1} de ${project.images.length}`;
-
-            const woodEl = document.getElementById("spec-wood");
-            if (woodEl) woodEl.textContent = project.wood;
-
-            const finishEl = document.getElementById("spec-finish");
-            if (finishEl) finishEl.textContent = project.finish;
-
-            const craftEl = document.getElementById("spec-craft");
-            if (craftEl) craftEl.textContent = project.craft;
 
             const thumbContainer = document.getElementById("lightbox-thumbnails");
             if (thumbContainer) {
@@ -471,7 +436,7 @@
 
         function downloadCurrentImage() {
             const url = projectsData[currentLightboxProjectIndex].images[currentLightboxImageIndex];
-            window.open(url, '_blank');
+            if (url) window.open(url, '_blank');
         }
     </script>
 </body>
