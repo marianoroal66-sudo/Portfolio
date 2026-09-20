@@ -67,10 +67,16 @@
     <header class="sticky top-0 z-40 bg-stone-950/90 backdrop-blur-md border-b border-stone-800/80 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             
-            <!-- Logo Brand -->
+            <!-- Logo Brand en Esquina Superior Izquierda -->
             <a href="#" class="flex items-center gap-3 group">
-                <div class="w-10 h-10 rounded-full bg-stone-900 border border-brand-500/40 flex items-center justify-center text-brand-500 font-serif font-bold text-xl group-hover:border-brand-500 transition-colors">
-                    <i class="fa-solid fa-compass-drafting text-sm"></i>
+                <div class="w-12 h-12 rounded-full overflow-hidden border border-brand-500/40 group-hover:border-brand-500 transition-colors flex items-center justify-center bg-stone-900 p-1">
+                    <img 
+                        id="company-logo"
+                        src="https://drive.google.com/thumbnail?id=1RIWDKp5Ga-Ilu0mzohIyXyPrwb_5B27V&sz=w1200" 
+                        alt="Logo Valverde & Co." 
+                        class="w-full h-full object-contain"
+                        onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-10 h-10 rounded-full bg-stone-900 border border-brand-500/40 flex items-center justify-center text-brand-500 font-serif font-bold text-xl\'><i class=\'fa-solid fa-compass-drafting text-sm\'></i></div>';"
+                    >
                 </div>
                 <div>
                     <span class="font-serif text-xl sm:text-2xl font-bold tracking-tight text-stone-100 group-hover:text-brand-500 transition-colors">VALVERDE & CO.</span>
@@ -161,9 +167,7 @@
         </div>
     </footer>
 
-    <!-- ================================================================= -->
-    <!-- POP-UP MODAL: LIGHTBOX / DETALLE DEL PROYECTO                     -->
-    <!-- ================================================================= -->
+    <!-- POP-UP MODAL: LIGHTBOX / DETALLE DEL PROYECTO -->
     <div id="lightbox-modal" class="fixed inset-0 z-50 hidden bg-stone-950/95 backdrop-blur-xl flex flex-col justify-between p-4 sm:p-6 transition-opacity duration-300">
         
         <div class="flex items-center justify-between z-10">
@@ -192,7 +196,6 @@
             </div>
         </div>
 
-        <!-- Ficha Técnica del Proyecto en Lightbox -->
         <div class="bg-stone-900/90 border border-stone-800 rounded-2xl p-4 sm:p-5 max-w-4xl mx-auto w-full backdrop-blur-md">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
@@ -224,13 +227,8 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        // =========================================================================
-        // CONFIGURACIÓN DE TU REST API (Google Apps Script)
-        // Sustituye la URL por la URL de tu despliegue de Apps Script cuando esté lista.
-        // =========================================================================
-        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbySpVmWbpvBMkCmprPYlMWnHHSDkgtp7ZDAlUse-pKdq5sLiupfDI5LO_OeXKxaBk06/exec";
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw5kWQELT_08WyCtW4kwODyBgJ52eLRhmAgN3rFBwlHhkZHYhYet5Yzzj_45vE-S88/exec";
 
-        // Proyectos de respaldo (Fallback) en caso de que la URL no esté configurada o la API falle
         const fallbackProjectsData = [
             {
                 id: 1,
@@ -259,59 +257,6 @@
                     "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80"
                 ],
                 desc: "Pieza central tallada a mano en tablones macizos de nogal centenario con veteado simétrico."
-            },
-            {
-                id: 3,
-                title: "Cocina de Autor 'Ebony & Brass'",
-                category: "Cocinas de Autor",
-                location: "La Moraleja, Madrid",
-                wood: "Ébano de Macasar & Latón",
-                finish: "Laca Mate de Alta Resistencia",
-                craft: "Casado de Vetas Holandés",
-                images: [
-                    "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&w=1200&q=80"
-                ],
-                desc: "Isla de cocina esculpida con frentes en ébano y tiradores encastrados en bronce cepillado."
-            },
-            {
-                id: 4,
-                title: "Vestidor Master 'Sartorial Oak'",
-                category: "Vestidores & Armarios",
-                location: "Marbella, Málaga",
-                wood: "Roble Smoked & Piel Nobuk",
-                finish: "Tratamiento Cera Natural",
-                craft: "Cajonería Ensamblada a Mano",
-                images: [
-                    "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1200&q=80"
-                ],
-                desc: "Vestidor walk-in personalizado con interiores acolchados y puertas de cristal estriado."
-            },
-            {
-                id: 5,
-                title: "Aparador Escultórico 'Aethel'",
-                category: "Mobiliario a Medida",
-                location: "Sotogrande, Cádiz",
-                wood: "Castaño Centenario Carbonizado",
-                finish: "Técnica Shou Sugi Ban",
-                craft: "Talla Orgánica Manual",
-                images: [
-                    "https://images.unsplash.com/photo-1532323544230-7191fd51bc1b?auto=format&fit=crop&w=1200&q=80"
-                ],
-                desc: "Superficie tratada mediante carbonización tradicional japonesa para resaltar la textura del veteado."
-            },
-            {
-                id: 6,
-                title: "Panelado 'Louver Acacia'",
-                category: "Panelados & Boiseries",
-                location: "Pedralbes, Barcelona",
-                wood: "Acacia & Listonado de Haya",
-                finish: "Barniz Ecológico Acrílico",
-                craft: "Listonado Acústico Continuo",
-                images: [
-                    "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1200&q=80"
-                ],
-                desc: "Revestimiento alistonado continuo con propiedades de absorción acústica para zonas de estar."
             }
         ];
 
@@ -321,13 +266,11 @@
         let currentLightboxProjectIndex = 0;
         let currentLightboxImageIndex = 0;
 
-        // Inicialización
         document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("current-year").textContent = new Date().getFullYear();
             loadProjectsFromAPI();
         });
 
-        // Carga dinámicamente los proyectos desde la REST API
         async function loadProjectsFromAPI() {
             const loadingState = document.getElementById("loading-state");
             const photosContainer = document.getElementById("photos-container");
@@ -336,9 +279,7 @@
 
             if (statusBadge) statusBadge.classList.remove("hidden");
 
-            // Comprobar si se especificó una URL real
-            if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === "TU_URL_DE_APPS_SCRIPT_AQUI") {
-                console.warn("APPS_SCRIPT_URL no configurada. Usando catálogo de respaldo.");
+            if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("TU_URL")) {
                 if (statusText) statusText.textContent = "Catálogo Local (Fallback)";
                 projectsData = fallbackProjectsData;
                 finishLoading();
@@ -350,12 +291,16 @@
                 const response = await fetch(APPS_SCRIPT_URL);
                 const data = await response.json();
 
+                // Actualizar logo dinámicamente si la API lo devuelve
+                if (data.logoUrl) {
+                    const logoEl = document.getElementById("company-logo");
+                    if (logoEl) logoEl.src = data.logoUrl;
+                }
+
                 if (data.status === "success" && Array.isArray(data.projects) && data.projects.length > 0) {
-                    // Mapeo y normalización de la estructura proveniente de Google Apps Script
                     projectsData = data.projects
                         .filter(p => p.images && p.images.length > 0)
                         .map((p, index) => {
-                            // Extrae URLs de las imágenes (soporta array de objetos {url} o strings directos)
                             const imageUrls = p.images.map(img => typeof img === 'object' ? (img.url || img.src) : img);
 
                             return {
@@ -396,13 +341,11 @@
             renderGallery();
         }
 
-        // Extraer categorías únicas de los proyectos cargados
         function buildDynamicCategories() {
             const cats = new Set(projectsData.map(p => p.category).filter(Boolean));
             availableCategories = ["Todos", ...Array.from(cats)];
         }
 
-        // Filtros de Categorías
         function renderCategoryFilters() {
             const container = document.getElementById("category-filters");
             container.innerHTML = availableCategories.map(cat => `
@@ -489,7 +432,6 @@
             renderGallery();
         }
 
-        // Lightbox Modal
         function openLightbox(projectId) {
             currentLightboxProjectIndex = projectsData.findIndex(p => p.id === projectId);
             if (currentLightboxProjectIndex === -1) return;
@@ -533,7 +475,6 @@
         }
 
         function prevPhoto() {
-            const project = projectsData[currentLightboxProjectIndex];
             if (currentLightboxImageIndex > 0) {
                 currentLightboxImageIndex--;
             } else {
