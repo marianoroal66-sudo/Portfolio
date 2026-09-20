@@ -83,12 +83,6 @@
                     <span class="block text-[10px] uppercase tracking-widest text-stone-400 font-sans">Ebanistería & Interiorismo</span>
                 </div>
             </a>
-
-            <!-- Badge de estado de API -->
-            <!-- <div id="api-status-badge" class="hidden sm:flex items-center gap-2 text-xs bg-stone-900 border border-stone-800 px-3 py-1.5 rounded-full text-stone-400">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span id="api-status-text">Conectando a Drive...</span>
-            </div> -->
         </div>
     </header>
 
@@ -98,12 +92,7 @@
         <!-- Gallery Header Banner -->
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 pb-6 border-b border-stone-800">
             <div>
-                <!-- <div class="flex items-center gap-2 text-brand-500 text-xs font-semibold uppercase tracking-widest mb-1">
-                    <i class="fa-solid fa-border-all"></i>
-                    <span>Catálogo</span>
-                </div> -->
                 <h1 class="font-serif text-3xl sm:text-4xl font-bold text-stone-100">Galería de Proyectos</h1>
-                <!-- <p class="text-stone-400 text-sm mt-1">Explore nuestra selección de obras en madera noble, panelados a medida y mobiliario de autor.</p> -->
             </div>
 
             <div class="text-xs text-stone-400">
@@ -151,22 +140,6 @@
 
     </main>
 
-    <!-- Footer -->
-    <!-- <footer class="bg-stone-950 border-t border-stone-900 py-10 px-4 sm:px-6 lg:px-8 mt-12">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-            <div class="text-center md:text-left">
-                <span class="font-serif font-bold text-lg text-stone-200">VALVERDE & CO.</span>
-                <p class="text-xs text-stone-500 mt-1">© <span id="current-year"></span> Todos los derechos reservados. Ebanistería Fina e Interiorismo.</p>
-            </div>
-
-            <div class="flex items-center gap-4 text-stone-400">
-                <a href="#" class="w-8 h-8 rounded-full bg-stone-900 border border-stone-800 flex items-center justify-center hover:text-brand-500 transition-colors"><i class="fa-brands fa-instagram text-xs"></i></a>
-                <a href="#" class="w-8 h-8 rounded-full bg-stone-900 border border-stone-800 flex items-center justify-center hover:text-brand-500 transition-colors"><i class="fa-brands fa-pinterest text-xs"></i></a>
-                <a href="#" class="w-8 h-8 rounded-full bg-stone-900 border border-stone-800 flex items-center justify-center hover:text-brand-500 transition-colors"><i class="fa-brands fa-linkedin-in text-xs"></i></a>
-            </div>
-        </div>
-    </footer> -->
-
     <!-- POP-UP MODAL: LIGHTBOX / DETALLE DEL PROYECTO -->
     <div id="lightbox-modal" class="fixed inset-0 z-50 hidden bg-stone-950/95 backdrop-blur-xl flex flex-col justify-between p-4 sm:p-6 transition-opacity duration-300">
         
@@ -195,34 +168,6 @@
                 <div id="lightbox-thumbnails" class="flex items-center gap-2 mt-4 overflow-x-auto max-w-full py-1"></div>
             </div>
         </div>
-
-        <!-- <div class="bg-stone-900/90 border border-stone-800 rounded-2xl p-4 sm:p-5 max-w-4xl mx-auto w-full backdrop-blur-md">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                    <div class="flex items-center gap-2 mb-1">
-                        <span id="lightbox-category" class="bg-brand-500/20 text-brand-500 text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full">Categoría</span>
-                        <span id="lightbox-location" class="text-xs text-stone-400 flex items-center gap-1"><i class="fa-solid fa-location-dot"></i> Ubicación</span>
-                    </div>
-                    <h3 id="lightbox-title" class="font-serif text-lg sm:text-xl font-bold text-stone-100">Título del Proyecto</h3>
-                    <p id="lightbox-desc" class="text-xs text-stone-400 mt-1 font-light">Descripción de la obra.</p>
-                </div>
-
-                <div class="flex flex-wrap items-center gap-2 text-xs text-stone-300 border-t md:border-t-0 border-stone-800 pt-3 md:pt-0">
-                    <div class="bg-stone-950 px-3 py-1.5 rounded-lg border border-stone-800 flex items-center gap-1.5">
-                        <i class="fa-solid fa-tree text-brand-500"></i>
-                        <span id="spec-wood">Madera</span>
-                    </div>
-                    <div class="bg-stone-950 px-3 py-1.5 rounded-lg border border-stone-800 flex items-center gap-1.5">
-                        <i class="fa-solid fa-wand-magic-sparkles text-brand-500"></i>
-                        <span id="spec-finish">Acabado</span>
-                    </div>
-                    <div class="bg-stone-950 px-3 py-1.5 rounded-lg border border-stone-800 flex items-center gap-1.5">
-                        <i class="fa-solid fa-screwdriver-wrench text-brand-500"></i>
-                        <span id="spec-craft">Ensamble</span>
-                    </div>
-                </div>
-            </div>
-        </div> -->
     </div>
 
     <!-- JavaScript Application Logic -->
@@ -267,7 +212,8 @@
         let currentLightboxImageIndex = 0;
 
         document.addEventListener("DOMContentLoaded", () => {
-            document.getElementById("current-year").textContent = new Date().getFullYear();
+            const currentYearEl = document.getElementById("current-year");
+            if (currentYearEl) currentYearEl.textContent = new Date().getFullYear();
             loadProjectsFromAPI();
         });
 
@@ -291,7 +237,6 @@
                 const response = await fetch(APPS_SCRIPT_URL);
                 const data = await response.json();
 
-                // Actualizar logo dinámicamente si la API lo devuelve
                 if (data.logoUrl) {
                     const logoEl = document.getElementById("company-logo");
                     if (logoEl) logoEl.src = data.logoUrl;
@@ -333,8 +278,8 @@
             const loadingState = document.getElementById("loading-state");
             const photosContainer = document.getElementById("photos-container");
 
-            loadingState.classList.add("hidden");
-            photosContainer.classList.remove("hidden");
+            if (loadingState) loadingState.classList.add("hidden");
+            if (photosContainer) photosContainer.classList.remove("hidden");
 
             buildDynamicCategories();
             renderCategoryFilters();
@@ -348,6 +293,7 @@
 
         function renderCategoryFilters() {
             const container = document.getElementById("category-filters");
+            if (!container) return;
             container.innerHTML = availableCategories.map(cat => `
                 <button onclick="setCategory('${cat}')" 
                         class="px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
@@ -388,37 +334,39 @@
             if (countEl) countEl.textContent = dataToRender.length;
 
             if (dataToRender.length === 0) {
-                container.innerHTML = "";
-                emptyState.classList.remove("hidden");
+                if (container) container.innerHTML = "";
+                if (emptyState) emptyState.classList.remove("hidden");
                 return;
             }
 
-            emptyState.classList.add("hidden");
+            if (emptyState) emptyState.classList.add("hidden");
 
-            container.innerHTML = dataToRender.map((project) => `
-                <div class="masonry-item group cursor-pointer" onclick="openLightbox(${project.id})">
-                    <div class="relative overflow-hidden rounded-2xl bg-stone-900 border border-stone-800 shadow-lg">
-                        <img src="${project.images[0]}" alt="${project.title}" class="w-full h-auto object-cover img-hover-zoom">
-                        
-                        ${project.images.length > 1 ? `
-                            <div class="absolute top-3 right-3 bg-stone-950/80 backdrop-blur-md border border-stone-800 text-stone-200 text-[11px] px-2.5 py-1 rounded-full flex items-center gap-1.5">
-                                <i class="fa-solid fa-layer-group text-brand-500 text-[10px]"></i>
-                                <span>${project.images.length} fotos</span>
+            if (container) {
+                container.innerHTML = dataToRender.map((project) => `
+                    <div class="masonry-item group cursor-pointer" onclick="openLightbox(${project.id})">
+                        <div class="relative overflow-hidden rounded-2xl bg-stone-900 border border-stone-800 shadow-lg">
+                            <img src="${project.images[0]}" alt="${project.title}" class="w-full h-auto object-cover img-hover-zoom">
+                            
+                            ${project.images.length > 1 ? `
+                                <div class="absolute top-3 right-3 bg-stone-950/80 backdrop-blur-md border border-stone-800 text-stone-200 text-[11px] px-2.5 py-1 rounded-full flex items-center gap-1.5">
+                                    <i class="fa-solid fa-layer-group text-brand-500 text-[10px]"></i>
+                                    <span>${project.images.length} fotos</span>
+                                </div>
+                            ` : ''}
+
+                            <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
+                                <span class="text-[10px] font-bold uppercase tracking-widest text-brand-500 bg-stone-950/80 backdrop-blur-md px-2.5 py-1 rounded-full w-max mb-2">
+                                    ${project.category}
+                                </span>
+                                <h3 class="font-serif text-lg font-bold text-white leading-snug">${project.title}</h3>
+                                <p class="text-xs text-stone-300 flex items-center gap-1 mt-1">
+                                    <i class="fa-solid fa-tree text-brand-500"></i> ${project.wood}
+                                </p>
                             </div>
-                        ` : ''}
-
-                        <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
-                            <span class="text-[10px] font-bold uppercase tracking-widest text-brand-500 bg-stone-950/80 backdrop-blur-md px-2.5 py-1 rounded-full w-max mb-2">
-                                ${project.category}
-                            </span>
-                            <h3 class="font-serif text-lg font-bold text-white leading-snug">${project.title}</h3>
-                            <p class="text-xs text-stone-300 flex items-center gap-1 mt-1">
-                                <i class="fa-solid fa-tree text-brand-500"></i> ${project.wood}
-                            </p>
                         </div>
                     </div>
-                </div>
-            `).join("");
+                `).join("");
+            }
         }
 
         function filterPhotos() {
@@ -426,7 +374,8 @@
         }
 
         function resetFilters() {
-            document.getElementById("search-input").value = "";
+            const input = document.getElementById("search-input");
+            if (input) input.value = "";
             activeCategory = "Todos";
             renderCategoryFilters();
             renderGallery();
@@ -439,33 +388,52 @@
             currentLightboxImageIndex = 0;
             updateLightboxContent();
 
-            document.getElementById("lightbox-modal").classList.remove("hidden");
+            const modal = document.getElementById("lightbox-modal");
+            if (modal) modal.classList.remove("hidden");
             document.body.style.overflow = "hidden";
         }
 
         function updateLightboxContent() {
             const project = projectsData[currentLightboxProjectIndex];
 
-            document.getElementById("lightbox-image").src = project.images[currentLightboxImageIndex];
-            document.getElementById("lightbox-title").textContent = project.title;
-            document.getElementById("lightbox-category").textContent = project.category;
-            document.getElementById("lightbox-location").innerHTML = `<i class="fa-solid fa-location-dot"></i> ${project.location}`;
-            document.getElementById("lightbox-desc").textContent = project.desc;
-            document.getElementById("lightbox-counter").textContent = `Imagen ${currentLightboxImageIndex + 1} de ${project.images.length}`;
+            const imgEl = document.getElementById("lightbox-image");
+            if (imgEl) imgEl.src = project.images[currentLightboxImageIndex];
 
-            document.getElementById("spec-wood").textContent = project.wood;
-            document.getElementById("spec-finish").textContent = project.finish;
-            document.getElementById("spec-craft").textContent = project.craft;
+            const titleEl = document.getElementById("lightbox-title");
+            if (titleEl) titleEl.textContent = project.title;
+
+            const catEl = document.getElementById("lightbox-category");
+            if (catEl) catEl.textContent = project.category;
+
+            const locEl = document.getElementById("lightbox-location");
+            if (locEl) locEl.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${project.location}`;
+
+            const descEl = document.getElementById("lightbox-desc");
+            if (descEl) descEl.textContent = project.desc;
+
+            const counterEl = document.getElementById("lightbox-counter");
+            if (counterEl) counterEl.textContent = `Imagen ${currentLightboxImageIndex + 1} de ${project.images.length}`;
+
+            const woodEl = document.getElementById("spec-wood");
+            if (woodEl) woodEl.textContent = project.wood;
+
+            const finishEl = document.getElementById("spec-finish");
+            if (finishEl) finishEl.textContent = project.finish;
+
+            const craftEl = document.getElementById("spec-craft");
+            if (craftEl) craftEl.textContent = project.craft;
 
             const thumbContainer = document.getElementById("lightbox-thumbnails");
-            if (project.images.length > 1) {
-                thumbContainer.innerHTML = project.images.map((img, idx) => `
-                    <button onclick="setLightboxImage(${idx})" class="w-12 h-12 rounded-lg overflow-hidden border-2 transition-all ${idx === currentLightboxImageIndex ? 'border-brand-500 scale-105' : 'border-stone-800 opacity-60 hover:opacity-100'}">
-                        <img src="${img}" class="w-full h-full object-cover">
-                    </button>
-                `).join("");
-            } else {
-                thumbContainer.innerHTML = "";
+            if (thumbContainer) {
+                if (project.images.length > 1) {
+                    thumbContainer.innerHTML = project.images.map((img, idx) => `
+                        <button onclick="setLightboxImage(${idx})" class="w-12 h-12 rounded-lg overflow-hidden border-2 transition-all ${idx === currentLightboxImageIndex ? 'border-brand-500 scale-105' : 'border-stone-800 opacity-60 hover:opacity-100'}">
+                            <img src="${img}" class="w-full h-full object-cover">
+                        </button>
+                    `).join("");
+                } else {
+                    thumbContainer.innerHTML = "";
+                }
             }
         }
 
@@ -496,7 +464,8 @@
         }
 
         function closeLightbox() {
-            document.getElementById("lightbox-modal").classList.add("hidden");
+            const modal = document.getElementById("lightbox-modal");
+            if (modal) modal.classList.add("hidden");
             document.body.style.overflow = "auto";
         }
 
