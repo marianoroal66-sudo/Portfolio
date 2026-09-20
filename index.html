@@ -254,7 +254,6 @@
                 console.error("Error al cargar desde API:", error);
                 projectsData = fallbackProjectsData;
             } finally {
-                // Se ejecuta SIEMPRE para asegurar que los proyectos se muestren
                 finishLoading();
             }
         }
@@ -344,9 +343,6 @@
                                     ${project.category}
                                 </span>
                                 <h3 class="font-serif text-lg font-bold text-white leading-snug">${project.title}</h3>
-                                <p class="text-xs text-stone-300 flex items-center gap-1 mt-1">
-                                    <i class="fa-solid fa-tree text-brand-500"></i> ${project.wood}
-                                </p>
                             </div>
                         </div>
                     </div>
