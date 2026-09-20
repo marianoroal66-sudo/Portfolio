@@ -72,9 +72,10 @@
                 <div class="w-12 h-12 rounded-full overflow-hidden border border-brand-500/40 group-hover:border-brand-500 transition-colors flex items-center justify-center bg-stone-900 p-1">
                     <img 
                         id="company-logo"
-                        src="https://drive.google.com/thumbnail?id=1RIWDKp5Ga-Ilu0mzohIyXyPrwb_5B27V&sz=w1200" 
+                        src="https://lh3.googleusercontent.com/d/1RIWDKp5Ga-Ilu0mzohIyXyPrwb_5B27V" 
                         alt="Logo Mariano Rodríguez" 
                         class="w-full h-full object-contain"
+                        referrerpolicy="no-referrer"
                         onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-10 h-10 rounded-full bg-stone-900 border border-brand-500/40 flex items-center justify-center text-brand-500 font-serif font-bold text-xl\'><i class=\'fa-solid fa-compass-drafting text-sm\'></i></div>';"
                     >
                 </div>
@@ -164,7 +165,7 @@
             </button>
 
             <div class="max-h-full max-w-5xl flex flex-col items-center justify-center p-2">
-                <img id="lightbox-image" src="" alt="" class="max-h-[60vh] sm:max-h-[65vh] w-auto max-w-full object-contain rounded-lg shadow-2xl">
+                <img id="lightbox-image" src="" alt="" referrerpolicy="no-referrer" class="max-h-[60vh] sm:max-h-[65vh] w-auto max-w-full object-contain rounded-lg shadow-2xl">
                 <div id="lightbox-thumbnails" class="flex items-center gap-2 mt-4 overflow-x-auto max-w-full py-1"></div>
             </div>
         </div>
@@ -219,6 +220,16 @@
             loadProjectsFromAPI();
         });
 
+        // Función para adaptar URLs de Google Drive a enlaces compatibles con navegadores móviles
+        function formatDriveUrl(url) {
+            if (!url) return "";
+            const match = url.match(/id=([a-zA-Z0-9_-]+)/);
+            if (match && match[1]) {
+                return `https://lh3.googleusercontent.com/d/${match[1]}`;
+            }
+            return url;
+        }
+
         async function loadProjectsFromAPI() {
             try {
                 const response = await fetch(APPS_SCRIPT_URL);
@@ -226,14 +237,17 @@
 
                 if (data.logoUrl) {
                     const logoEl = document.getElementById("company-logo");
-                    if (logoEl) logoEl.src = data.logoUrl;
+                    if (logoEl) logoEl.src = formatDriveUrl(data.logoUrl);
                 }
 
                 if (data.status === "success" && Array.isArray(data.projects) && data.projects.length > 0) {
                     projectsData = data.projects
                         .filter(p => p.images && p.images.length > 0)
                         .map((p, index) => {
-                            const imageUrls = p.images.map(img => typeof img === 'object' ? (img.url || img.src) : img);
+                            const imageUrls = p.images.map(img => {
+                                const rawUrl = typeof img === 'object' ? (img.url || img.src) : img;
+                                return formatDriveUrl(rawUrl);
+                            });
 
                             return {
                                 id: index + 1,
@@ -329,7 +343,7 @@
                 container.innerHTML = dataToRender.map((project) => `
                     <div class="masonry-item group cursor-pointer" onclick="openLightbox(${project.id})">
                         <div class="relative overflow-hidden rounded-2xl bg-stone-900 border border-stone-800 shadow-lg">
-                            <img src="${project.images[0]}" alt="${project.title}" class="w-full h-auto object-cover img-hover-zoom">
+                            <img src="${project.images[0]}" alt="${project.title}" referrerpolicy="no-referrer" class="w-full h-auto object-cover img-hover-zoom">
                             
                             ${project.images.length > 1 ? `
                                 <div class="absolute top-3 right-3 bg-stone-950/80 backdrop-blur-md border border-stone-800 text-stone-200 text-[11px] px-2.5 py-1 rounded-full flex items-center gap-1.5">
@@ -389,7 +403,7 @@
                 if (project.images.length > 1) {
                     thumbContainer.innerHTML = project.images.map((img, idx) => `
                         <button onclick="setLightboxImage(${idx})" class="w-12 h-12 rounded-lg overflow-hidden border-2 transition-all ${idx === currentLightboxImageIndex ? 'border-brand-500 scale-105' : 'border-stone-800 opacity-60 hover:opacity-100'}">
-                            <img src="${img}" class="w-full h-full object-cover">
+                            <img src="${img}" referrerpolicy="no-referrer" class="w-full h-full object-cover">
                         </button>
                     `).join("");
                 } else {
